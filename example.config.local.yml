@@ -1,0 +1,13 @@
+logDir: "logs"
+port: 3002
+
+mongo:
+  dbhost: "host"
+  dbname: "dbname"
+  dbuser: "dbuser"
+  dbpassword: "dbpassword"
+
+mysql:
+  dbname: "test_mysql_bd"
+  dbuser: "dbuser"
+  dbpassword: "dbpassword"
