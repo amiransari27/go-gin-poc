@@ -39,7 +39,7 @@ func NewGinServer(c *dig.Container, loadControllersFn func(c *dig.Container)) Gi
 	server.Use(gin.Recovery(), gin.Logger())
 	server.Use(middleware.ClsMiddleware())
 
-	// load controller here
+	// load controller here.
 	loadControllersFn(c)
 
 	docs.SwaggerInfo.BasePath = "/"
