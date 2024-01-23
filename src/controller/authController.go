@@ -14,11 +14,11 @@ import (
 
 type authController struct {
 	service     service.IAuthService
-	logger      logger.Logrus
+	logger      logger.ILogrus
 	userService service.IUserService
 }
 
-func NewAuth(server *gin.Engine, service service.IAuthService, jwtService service.IJWTService, userService service.IUserService, logger logger.Logrus) {
+func NewAuth(server *gin.Engine, service service.IAuthService, jwtService service.IJWTService, userService service.IUserService, logger logger.ILogrus) {
 
 	controller := &authController{
 		service:     service,
@@ -28,12 +28,12 @@ func NewAuth(server *gin.Engine, service service.IAuthService, jwtService servic
 
 	server.POST("/login", func(ctx *gin.Context) {
 
-		token, err := controller.login(ctx)
+		tokenObj, err := controller.login(ctx)
 
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		} else {
-			ctx.JSON(http.StatusOK, gin.H{"accessToken": token})
+			ctx.JSON(http.StatusOK, tokenObj)
 		}
 	})
 
@@ -48,21 +48,28 @@ func NewAuth(server *gin.Engine, service service.IAuthService, jwtService servic
 		}
 	})
 
-	server.GET("/me", func(ctx *gin.Context) {
-		middleware.AuthMiddleware(ctx, jwtService, logger)
-	}, func(ctx *gin.Context) {
+	server.GET("/me", middleware.AuthMiddleware(jwtService, logger), func(ctx *gin.Context) {
 
 		user, err := controller.me(ctx)
 
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		} else {
-			ctx.JSON(http.StatusOK, gin.H{"data": user})
+			ctx.JSON(http.StatusOK, user)
 		}
 	})
 
 }
 
+// @Summary Register user
+// @Schemes
+// @Description register new user
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Success 200 {string} Register
+// @Router /register [post]
+// @Param data body entity.RegisterUser true "Register payload"
 func (c *authController) register(ctx *gin.Context) (string, error) {
 
 	var userObj entity.RegisterUser
@@ -71,7 +78,7 @@ func (c *authController) register(ctx *gin.Context) (string, error) {
 		return "", err
 	}
 
-	_, err = c.service.Register(&userObj)
+	_, err = c.service.Register(ctx, &userObj)
 
 	if err != nil {
 		return "", err
@@ -80,22 +87,40 @@ func (c *authController) register(ctx *gin.Context) (string, error) {
 	return "user register successfully", nil
 }
 
-func (c *authController) login(ctx *gin.Context) (string, error) {
+// @Summary Login user
+// @Schemes
+// @Description login user
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Success 200 {object} entity.LoginResponse
+// @Router /login [post]
+// @Param data body entity.UserCredentials true "Login payload"
+func (c *authController) login(ctx *gin.Context) (*entity.LoginResponse, error) {
 
 	var userCred entity.UserCredentials
 	err := ctx.ShouldBindJSON(&userCred)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
-	token, err := c.service.Login(&userCred)
+	token, err := c.service.Login(ctx, &userCred)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
-	return token, nil
+	return &entity.LoginResponse{AccessToken: token}, nil
 }
 
+// @Summary Me
+// @Schemes
+// @Description fetch logged in user data
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Success 200 {object} model.User
+// @Router /me [get]
+// @Param Authorization header string true "Bearer Token"
 func (c *authController) me(ctx *gin.Context) (*model.User, error) {
 
 	hexString := ctx.Request.Header.Get("userId")
@@ -104,7 +129,7 @@ func (c *authController) me(ctx *gin.Context) (*model.User, error) {
 		return nil, err
 	}
 
-	userObj, err := c.userService.FindOneById(userId)
+	userObj, err := c.userService.FindOneById(ctx, userId)
 	if err != nil {
 		return nil, err
 	}

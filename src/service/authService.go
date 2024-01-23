@@ -6,13 +6,14 @@ import (
 	"go-gin-api/src/entity"
 	"go-gin-api/src/model"
 
+	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
 	"golang.org/x/crypto/bcrypt"
 )
 
 type IAuthService interface {
-	Login(*entity.UserCredentials) (string, error)
-	Register(*entity.RegisterUser) (interface{}, error)
+	Login(*gin.Context, *entity.UserCredentials) (string, error)
+	Register(*gin.Context, *entity.RegisterUser) (interface{}, error)
 }
 
 type authService struct {
@@ -27,7 +28,7 @@ func NewAuth(jwtService IJWTService, ud dao.UserDao) IAuthService {
 	}
 }
 
-func (service *authService) Login(userCred *entity.UserCredentials) (string, error) {
+func (service *authService) Login(ctx *gin.Context, userCred *entity.UserCredentials) (string, error) {
 
 	// check user exist or not
 	userObj, err := service.userDao.FindOne(bson.M{"username": userCred.Username})
@@ -52,7 +53,7 @@ func (service *authService) Login(userCred *entity.UserCredentials) (string, err
 	return token, nil
 }
 
-func (service *authService) Register(userObj *entity.RegisterUser) (interface{}, error) {
+func (service *authService) Register(ctx *gin.Context, userObj *entity.RegisterUser) (interface{}, error) {
 
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(userObj.Password), bcrypt.DefaultCost)
 	if err != nil {

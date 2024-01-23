@@ -1,6 +1,10 @@
 package config
 
 import (
+	"fmt"
+	"os"
+	"strings"
+
 	log "github.com/sirupsen/logrus"
 
 	"github.com/spf13/viper"
@@ -26,12 +30,20 @@ type MysqlConfigurations struct {
 	DBPassword string
 }
 
-var (
-	configuration *Configurations
-)
+var configuration = &Configurations{}
 
 func init() {
-	viper.SetConfigName("config.local.yml")
+	env := strings.ToUpper(os.Getenv("env"))
+	fmt.Println("Env : ", env)
+
+	if env == "PROD" {
+		viper.SetConfigName("config.prod.yml")
+	} else if env == "STAGE" {
+		viper.SetConfigName("config.stage.yml")
+	} else {
+		viper.SetConfigName("config.local.yml")
+	}
+
 	viper.AddConfigPath(".")
 	// viper.AutomaticEnv() // Enable VIPER to read Environment Variables
 	viper.SetConfigType("yml")
@@ -43,7 +55,7 @@ func init() {
 	// Set undefined variables
 	// viper.SetDefault("database.dbname", "test_db")
 
-	err := viper.Unmarshal(&configuration)
+	err := viper.Unmarshal(configuration)
 	if err != nil {
 		log.Fatal("Unable to decode into struct", err)
 	}

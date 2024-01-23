@@ -7,11 +7,19 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func NewStatus(server *gin.Engine, logger logger.Logrus) {
+// @Summary check status
+// @Schemes
+// @Description do ping
+// @Tags Ping
+// @Accept json
+// @Produce json
+// @Success 200 {string} NewStatus
+// @Router /status [get]
+func NewStatus(server *gin.Engine, logger logger.ILogrus) {
 
 	server.GET("/status", func(ctx *gin.Context) {
 		//middleware
-		logger.Info("calling middleware status called")
+		logger.Info(ctx, "calling middleware status called")
 	}, func(ctx *gin.Context) {
 
 		ctx.JSON(http.StatusOK, gin.H{"status": "OK"})

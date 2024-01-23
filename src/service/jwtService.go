@@ -20,10 +20,10 @@ type IJWTService interface {
 }
 
 type jwtService struct {
-	logger logger.Logrus
+	logger logger.ILogrus
 }
 
-func NewJWT(logger logger.Logrus) IJWTService {
+func NewJWT(logger logger.ILogrus) IJWTService {
 	return &jwtService{
 		logger,
 	}

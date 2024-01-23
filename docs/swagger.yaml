@@ -1,0 +1,129 @@
+definitions:
+  entity.LoginResponse:
+    properties:
+      accessToken:
+        type: string
+    type: object
+  entity.RegisterUser:
+    properties:
+      firstName:
+        type: string
+      lastName:
+        type: string
+      password:
+        minLength: 6
+        type: string
+      username:
+        minLength: 4
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  entity.UserCredentials:
+    properties:
+      password:
+        minLength: 6
+        type: string
+      username:
+        minLength: 4
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  model.User:
+    properties:
+      _id:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+      username:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: login user
+      parameters:
+      - description: Login payload
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/entity.UserCredentials'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.LoginResponse'
+      summary: Login user
+      tags:
+      - Auth
+  /me:
+    get:
+      consumes:
+      - application/json
+      description: fetch logged in user data
+      parameters:
+      - description: Bearer Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.User'
+      summary: Me
+      tags:
+      - Auth
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: register new user
+      parameters:
+      - description: Register payload
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/entity.RegisterUser'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Register user
+      tags:
+      - Auth
+  /status:
+    get:
+      consumes:
+      - application/json
+      description: do ping
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: check status
+      tags:
+      - Ping
+swagger: "2.0"

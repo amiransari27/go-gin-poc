@@ -17,7 +17,7 @@ type MongoClientDatabase struct {
 	*mongo.Database
 }
 
-func NewMongoConnection(logger logger.Logrus) MongoClientDatabase {
+func NewMongoConnection(logger logger.ILogrus) MongoClientDatabase {
 
 	mongoCred := config.GetConfig().Mongo
 	connectionString := fmt.Sprintf("mongodb+srv://%s:%s@%s/?retryWrites=true&w=majority", mongoCred.DBUser, mongoCred.DBPassword, mongoCred.DBHost)
@@ -37,7 +37,7 @@ func NewMongoConnection(logger logger.Logrus) MongoClientDatabase {
 		client = nil
 		log.Fatal(err)
 	}
-	logger.Info("Connected to MongoDB")
+	logger.Info(nil, "Connected to MongoDB")
 
 	database := client.Database(dbName)
 

@@ -17,19 +17,17 @@ type VideoController interface {
 
 type videoController struct {
 	service service.VideoService
-	logger  logger.Logrus
+	logger  logger.ILogrus
 }
 
-func NewVideo(server *gin.Engine, service service.VideoService, jwtService service.IJWTService, logger logger.Logrus) {
+func NewVideo(server *gin.Engine, service service.VideoService, jwtService service.IJWTService, logger logger.ILogrus) {
 
 	videoController := &videoController{
 		service,
 		logger,
 	}
 
-	group := server.Group("/videos", func(ctx *gin.Context) {
-		middleware.AuthMiddleware(ctx, jwtService, logger)
-	})
+	group := server.Group("/videos", middleware.AuthMiddleware(jwtService, logger))
 
 	group.GET("/", func(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, videoController.findAll())
@@ -49,7 +47,7 @@ func NewVideo(server *gin.Engine, service service.VideoService, jwtService servi
 }
 
 func (c *videoController) save(ctx *gin.Context) error {
-	c.logger.Info("called save video")
+	c.logger.Info(nil, "called save video")
 	var video entity.Video
 	err := ctx.ShouldBindJSON(&video)
 	if err != nil {
@@ -57,10 +55,10 @@ func (c *videoController) save(ctx *gin.Context) error {
 	}
 
 	r := c.service.Save(video)
-	c.logger.Debug(r)
+	c.logger.Debug(ctx, r)
 	return nil
 }
 func (c *videoController) findAll() []entity.Video {
-	c.logger.Info("called find all videos")
+	c.logger.Info(nil, "called find all videos")
 	return c.service.FindAll()
 }

@@ -2,17 +2,21 @@ package logger
 
 import (
 	"fmt"
+	"go-gin-api/src/appConst"
 	"go-gin-api/src/config"
+	"io"
 	"os"
+	"strings"
 
+	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 )
 
-type Logrus interface {
-	Debug(args ...interface{})
-	Info(args ...interface{})
-	Warning(args ...interface{})
-	Error(args ...interface{})
+type ILogrus interface {
+	Debug(*gin.Context, ...interface{})
+	Info(*gin.Context, ...interface{})
+	Warning(*gin.Context, ...interface{})
+	Error(*gin.Context, ...interface{})
 }
 
 type logrus struct {
@@ -26,7 +30,8 @@ var logLevels = map[string]log.Level{
 	"Error": log.ErrorLevel,
 }
 
-func NewLogrus() Logrus {
+func NewLogrus() ILogrus {
+	env := strings.ToUpper(os.Getenv("env"))
 	logDir := config.GetConfig().LogDir
 	logInstance := &logrus{logger: make(map[string]*log.Logger)}
 
@@ -38,7 +43,12 @@ func NewLogrus() Logrus {
 			fmt.Sprintf("%s/%s.log", logDir, severity), os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666,
 		)
 		if err == nil {
-			lg.SetOutput(file)
+			if env == "PROD" || env == "STAGE" {
+				lg.SetOutput(file)
+			} else {
+				lg.SetOutput(io.MultiWriter(file, os.Stdout))
+			}
+
 		} else {
 			log.Fatal("Error occured while creating logger file", err)
 		}
@@ -48,16 +58,42 @@ func NewLogrus() Logrus {
 	return logInstance
 }
 
-func (l *logrus) Debug(args ...interface{}) {
-	l.logger["Debug"].Debug(args...)
+func (l *logrus) Debug(ctx *gin.Context, args ...interface{}) {
+	if ctx != nil {
+		l.logger["Debug"].WithFields(getLogFields(ctx)).Info(args...)
+	} else {
+		l.logger["Debug"].Info(args...)
+	}
 }
 
-func (l *logrus) Info(args ...interface{}) {
-	l.logger["Info"].Info(args...)
+func (l *logrus) Info(ctx *gin.Context, args ...interface{}) {
+	if ctx != nil {
+		l.logger["Info"].WithFields(getLogFields(ctx)).Info(args...)
+	} else {
+		l.logger["Info"].Info(args...)
+	}
+
 }
-func (l *logrus) Warning(args ...interface{}) {
-	l.logger["Warn"].Warn(args...)
+func (l *logrus) Warning(ctx *gin.Context, args ...interface{}) {
+	if ctx != nil {
+		l.logger["Warn"].WithFields(getLogFields(ctx)).Warn(args...)
+	} else {
+		l.logger["Warn"].Warn(args...)
+	}
+
 }
-func (l *logrus) Error(args ...interface{}) {
-	l.logger["Error"].Error(args...)
+func (l *logrus) Error(ctx *gin.Context, args ...interface{}) {
+	if ctx != nil {
+		l.logger["Error"].WithFields(getLogFields(ctx)).Warn(args...)
+	} else {
+		l.logger["Error"].Warn(args...)
+	}
+}
+
+func getLogFields(ctx *gin.Context) log.Fields {
+	requestId, _ := ctx.Get(appConst.XRequestId)
+	fields := log.Fields{
+		"request": requestId.(string),
+	}
+	return fields
 }
