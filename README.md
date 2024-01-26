@@ -66,6 +66,7 @@ Explanation:
 
 
 5. **Swagger init:**
+
 Certainly! The `swag init` command generates Swagger documentation based on the comments provided in your Go code. Here's how you can run the command:
 
 Make sure you have `swag` installed. If not, install it using:
