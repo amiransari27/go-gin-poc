@@ -7,6 +7,7 @@ import (
 	"go-gin-api/src/model"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -18,10 +19,10 @@ type IAuthService interface {
 
 type authService struct {
 	jwtService IJWTService
-	userDao    dao.UserDao
+	userDao    dao.IUserDao
 }
 
-func NewAuth(jwtService IJWTService, ud dao.UserDao) IAuthService {
+func NewAuth(jwtService IJWTService, ud dao.IUserDao) IAuthService {
 	return &authService{
 		jwtService: jwtService,
 		userDao:    ud,
@@ -59,8 +60,14 @@ func (service *authService) Register(ctx *gin.Context, userObj *entity.RegisterU
 	if err != nil {
 		return nil, err
 	}
+	userId, err := uuid.NewUUID()
+
+	if err != nil {
+		return nil, err
+	}
 
 	newuser := &model.User{
+		UserId:    userId.String(),
 		Username:  userObj.Username,
 		Password:  string(hashedPassword),
 		FirstName: userObj.FirstName,

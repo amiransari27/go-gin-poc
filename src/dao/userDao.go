@@ -14,7 +14,7 @@ import (
 
 const collectionName string = "users"
 
-type UserDao interface {
+type IUserDao interface {
 	Find(bson.M) (*model.User, error)
 	FindOne(bson.M) (*model.User, error)
 	Save(*model.User) (interface{}, error)
@@ -24,18 +24,19 @@ type userDao struct {
 	coll *mongo.Collection
 }
 
-func NewUserDao(mcd mongoDB.MongoClientDatabase) UserDao {
+func NewUserDao(mcd mongoDB.MongoClientDatabase) IUserDao {
 
 	userCollection := mcd.Database.Collection(collectionName)
 
-	createIndex(userCollection)
-
-	return &userDao{
+	obj := &userDao{
 		coll: userCollection,
 	}
+	obj.createIndex()
+
+	return obj
 }
 
-func createIndex(coll *mongo.Collection) {
+func (ud *userDao) createIndex() {
 	//create index and unique key
 	uniqueIndex := mongo.IndexModel{
 		Keys: bson.M{
@@ -43,11 +44,34 @@ func createIndex(coll *mongo.Collection) {
 		}, Options: options.Index().SetUnique(true),
 	}
 
-	ind, err := coll.Indexes().CreateOne(context.Background(), uniqueIndex)
+	_, err := ud.coll.Indexes().CreateOne(context.Background(), uniqueIndex)
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("success index creation", ind)
+
+	uniqueIndex = mongo.IndexModel{
+		Keys: bson.M{
+			"userId": -1, // index in decending order
+		}, Options: options.Index().SetUnique(true),
+	}
+
+	_, err = ud.coll.Indexes().CreateOne(context.Background(), uniqueIndex)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	index := mongo.IndexModel{
+		Keys: bson.M{
+			"createdAt": -1, // index in decending order
+		}, Options: nil,
+	}
+
+	_, err = ud.coll.Indexes().CreateOne(context.Background(), index)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println("success index creation for user collection")
 }
 
 func (ud *userDao) Save(userObj *model.User) (interface{}, error) {

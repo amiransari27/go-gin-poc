@@ -16,6 +16,7 @@ var Controllers = []interface{}{
 	controller.NewAuth,
 	controller.NewStatus,
 	controller.NewVideo,
+	controller.NewNoteController,
 }
 
 // services. repositry, logger, utils
@@ -24,10 +25,13 @@ var otherInjectable = []interface{}{
 	service.NewJWT,
 	service.NewVideo,
 	service.NewUserService,
+	service.NewNoteService,
+
 	logger.NewLogrus,
 	mongoDB.NewMongoConnection,
 
 	dao.NewUserDao,
+	dao.NewNoteDao,
 }
 
 func NewKernal() *dig.Container {
