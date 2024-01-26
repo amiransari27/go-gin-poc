@@ -19,34 +19,37 @@ Make sure you have Go installed on your system. You can download it from https:/
     go mod download
 
 3. **Configure the database:**
+
 save `example.config.local.yml` as `config.local.yml` and provide your database connection details.
 
 4. **Swagger docs:**
+
 Certainly! Below is an example Swagger documentation snippet based on your provided information.
 
+```
+// @Summary Fetch notes
+// @Description Fetch all notes for the authenticated user
+// @Tags Notes
+// @Accept json
+// @Produce json
+// @Security ApiKeyAuth
+// @Success 200 {object} []model.Note
+// @Router /notes [get]
+// @Param Authorization header string true "Bearer Token"
 
-    // @Summary Fetch notes
-    // @Description Fetch all notes for the authenticated user
-    // @Tags Notes
-    // @Accept json
-    // @Produce json
-    // @Security ApiKeyAuth
-    // @Success 200 {object} []model.Note
-    // @Router /notes [get]
-    // @Param Authorization header string true "Bearer Token"
+// The following comment annotations are for Swagger API documentation.
+// They can be added directly above the function definition in your Go code.
 
-    // The following comment annotations are for Swagger API documentation.
-    // They can be added directly above the function definition in your Go code.
-
-    // FetchNotesHandler handles the endpoint to fetch all notes for the authenticated user.
-    // It requires a valid Bearer Token in the Authorization header.
-    func (c *noteController) findAll(ctx *gin.Context) ([]*model.Note, error) {
-        notes, err := c.noteServ.FindAllForLoggedInUser(ctx)
-        if err != nil {
-            return nil, err
-        }
-        return notes, nil
+// FetchNotesHandler handles the endpoint to fetch all notes for the authenticated user.
+// It requires a valid Bearer Token in the Authorization header.
+func (c *noteController) findAll(ctx *gin.Context) ([]*model.Note, error) {
+    notes, err := c.noteServ.FindAllForLoggedInUser(ctx)
+    if err != nil {
+        return nil, err
     }
+    return notes, nil
+}
+```
 
 Explanation:
 
