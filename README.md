@@ -23,7 +23,8 @@ save `example.config.local.yml` as `config.local.yml` and provide your database 
 
 4. **Swagger docs:**
 Certainly! Below is an example Swagger documentation snippet based on your provided information.
-    
+
+
     // @Summary Fetch notes
     // @Description Fetch all notes for the authenticated user
     // @Tags Notes
