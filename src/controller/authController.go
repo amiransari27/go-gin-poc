@@ -118,6 +118,7 @@ func (c *authController) login(ctx *gin.Context) (*entity.LoginResponse, error) 
 // @Tags Auth
 // @Accept json
 // @Produce json
+// @Security ApiKeyAuth
 // @Success 200 {object} model.User
 // @Router /me [get]
 // @Param Authorization header string true "Bearer Token"

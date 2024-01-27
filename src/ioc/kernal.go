@@ -15,7 +15,6 @@ import (
 var Controllers = []interface{}{
 	controller.NewAuth,
 	controller.NewStatus,
-	controller.NewVideo,
 	controller.NewNoteController,
 }
 
@@ -23,7 +22,6 @@ var Controllers = []interface{}{
 var otherInjectable = []interface{}{
 	service.NewAuth,
 	service.NewJWT,
-	service.NewVideo,
 	service.NewUserService,
 	service.NewNoteService,
 

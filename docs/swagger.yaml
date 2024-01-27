@@ -120,6 +120,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/model.User'
+      security:
+      - ApiKeyAuth: []
       summary: Me
       tags:
       - Auth
@@ -171,7 +173,70 @@ paths:
           description: OK
           schema:
             type: string
+      security:
+      - ApiKeyAuth: []
       summary: Add new Note
+      tags:
+      - Notes
+  /notes/{noteId}:
+    get:
+      consumes:
+      - application/json
+      description: Fetch one note for user by note id
+      parameters:
+      - description: Bearer Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: note id
+        in: path
+        name: noteId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Note'
+      security:
+      - ApiKeyAuth: []
+      summary: Fetch note
+      tags:
+      - Notes
+    put:
+      consumes:
+      - application/json
+      description: update a note by its id
+      parameters:
+      - description: Bearer Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: note id
+        in: path
+        name: noteId
+        required: true
+        type: string
+      - description: note payload
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/entity.Note'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Note'
+      security:
+      - ApiKeyAuth: []
+      summary: Update Note
       tags:
       - Notes
   /register:

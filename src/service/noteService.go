@@ -13,6 +13,8 @@ import (
 type INoteService interface {
 	Save(*gin.Context, *entity.Note) (interface{}, error)
 	FindAllForLoggedInUser(*gin.Context) ([]*model.Note, error)
+	FindOneForLoggedInUser(*gin.Context, string) (*model.Note, error)
+	FindOneUpdateForLoggedInUser(*gin.Context, *entity.Note, string) (*model.Note, error)
 }
 
 type noteService struct {
@@ -71,4 +73,45 @@ func (s *noteService) FindAllForLoggedInUser(ctx *gin.Context) ([]*model.Note, e
 	}
 
 	return notes, nil
+}
+
+func (s *noteService) FindOneForLoggedInUser(ctx *gin.Context, noteId string) (*model.Note, error) {
+
+	// fetch user data from mongo
+	userObj, err := getLoggedInUser(ctx, s.userDao)
+	if err != nil {
+		return nil, err
+	}
+
+	note, err := s.noteDao.FindOne(bson.M{"userId": userObj.UserId, "noteId": noteId})
+	if err != nil {
+		return nil, err
+	}
+
+	return note, nil
+}
+
+func (s *noteService) FindOneUpdateForLoggedInUser(ctx *gin.Context, note *entity.Note, noteId string) (*model.Note, error) {
+
+	// fetch user data from mongo
+	userObj, err := getLoggedInUser(ctx, s.userDao)
+	if err != nil {
+		return nil, err
+	}
+
+	filter := bson.M{
+		"userId": userObj.UserId,
+		"noteId": noteId,
+	}
+
+	updateNote := bson.M{
+		"$set": note,
+	}
+
+	updatedNote, err := s.noteDao.FindOneAndUpdate(filter, updateNote)
+
+	if err != nil {
+		return nil, err
+	}
+	return updatedNote, nil
 }

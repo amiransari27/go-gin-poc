@@ -75,11 +75,11 @@ Make sure you have `swag` installed. If not, install it using:
 
 then Run the following command in the terminal:
 
-    swag init -g ./main.go -o cmd/docs
+    swag init -g ./main.go -o ./docs
     
 -g: Specifies the entry point of your application (main file).
 
--o: Specifies the output directory for the generated Swagger files (in this case, cmd/docs).
+-o: Specifies the output directory for the generated Swagger files (in this case, ./docs).
 
 After running the command, you should see a `docs` folder generated in the specified output directory.
 

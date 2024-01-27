@@ -18,6 +18,7 @@ type INoteDao interface {
 	Find(bson.M) ([]*model.Note, error)
 	FindOne(bson.M) (*model.Note, error)
 	Save(*model.Note) (interface{}, error)
+	FindOneAndUpdate(bson.M, bson.M) (*model.Note, error)
 }
 
 type noteDao struct {
@@ -103,6 +104,16 @@ func (nd *noteDao) Find(cond bson.M) ([]*model.Note, error) {
 func (nd *noteDao) FindOne(cond bson.M) (*model.Note, error) {
 	var note model.Note
 	obj := nd.coll.FindOne(context.Background(), cond) // find
+
+	obj.Decode(&note)
+
+	return &note, nil
+}
+
+func (nd *noteDao) FindOneAndUpdate(filter bson.M, updatedContent bson.M) (*model.Note, error) {
+	var note model.Note
+	opt := options.FindOneAndUpdate().SetReturnDocument(options.After)
+	obj := nd.coll.FindOneAndUpdate(context.Background(), filter, updatedContent, opt)
 
 	obj.Decode(&note)
 
