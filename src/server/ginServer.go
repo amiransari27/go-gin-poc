@@ -38,7 +38,7 @@ func NewGinServer(c *dig.Container, loadControllersFn func(c *dig.Container)) Gi
 	// or
 	server.Use(gin.Recovery(), gin.Logger())
 	server.Use(middleware.ClsMiddleware())
-	server.Use(middleware.IpBasedRateLimiterMiddleware())
+	server.Use(middleware.GlobalIpBasedRateLimiterMiddleware())
 
 	// load controller here
 	loadControllersFn(c)

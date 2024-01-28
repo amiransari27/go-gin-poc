@@ -11,3 +11,10 @@ mysql:
   dbname: "test_mysql_bd"
   dbuser: "dbuser"
   dbpassword: "dbpassword"
+
+rateLimiter:
+  enabled: false
+  # Bucket filling rate 
+  rate: 2 
+  # Token size of bucket
+  burst: 4

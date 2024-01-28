@@ -6,15 +6,17 @@ import (
 	"strings"
 
 	log "github.com/sirupsen/logrus"
+	"golang.org/x/time/rate"
 
 	"github.com/spf13/viper"
 )
 
 type Configurations struct {
-	Mongo  MongoConfigurations
-	Mysql  MysqlConfigurations
-	LogDir string
-	Port   string
+	Mongo       MongoConfigurations
+	Mysql       MysqlConfigurations
+	LogDir      string
+	Port        string
+	RateLimiter RateLimiterConfigurations
 }
 
 type MongoConfigurations struct {
@@ -28,6 +30,12 @@ type MysqlConfigurations struct {
 	DBName     string
 	DBUser     string
 	DBPassword string
+}
+
+type RateLimiterConfigurations struct {
+	Enabled bool
+	Rate    rate.Limit
+	Burst   int
 }
 
 var configuration = &Configurations{}
