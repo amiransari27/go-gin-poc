@@ -44,7 +44,7 @@ func NewKernal() *dig.Container {
 	return c
 }
 
-func LoadControllers(c *dig.Container) {
+func RegisterControllers(c *dig.Container) {
 	for _, controller := range Controllers {
 		c.Invoke(controller)
 	}
