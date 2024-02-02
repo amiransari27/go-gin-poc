@@ -5,54 +5,57 @@ This repository contains a web server implemented in Go using the Gin framework.
 
 ## Getting Started
 ### Prerequisites
-Make sure you have Go installed on your system. You can download it from https://golang.org/dl/.
+Make sure you have Go installed on your system. You can download it from [golang].
 
 ### Installation
     
-1. **Clone the repository:**
-    ```bash
+- **Clone the repository:**
+    ```
     git clone https://github.com/amiransari27/go-gin-poc your_project_name
     cd your_project_name
+    ```
 
-2. **Install dependencies:**
-    ```bash
+- **Install dependencies:**
+    ```
     go mod download
+    ```
 
-3. **Configure the database:**
+- **Configure the database:**
 
-save `example.config.local.yml` as `config.local.yml` and provide your database connection details.
+    save `example.config.local.yml` as `config.local.yml` and provide your database connection details.
 
-4. **Swagger docs:**
+- **Swagger docs:**
 
-Certainly! Below is an example Swagger documentation snippet based on your provided information.
+    Certainly! Below is an example Swagger documentation snippet based on your provided information.
 
-```
-// @Summary Fetch notes
-// @Description Fetch all notes for the authenticated user
-// @Tags Notes
-// @Accept json
-// @Produce json
-// @Security ApiKeyAuth
-// @Success 200 {object} []model.Note
-// @Router /notes [get]
-// @Param Authorization header string true "Bearer Token"
+    ```
+    // @Summary Fetch notes
+    // @Description Fetch all notes for the authenticated user
+    // @Tags Notes
+    // @Accept json
+    // @Produce json
+    // @Security ApiKeyAuth
+    // @Success 200 {object} []model.Note
+    // @Router /notes [get]
+    // @Param Authorization header string true "Bearer Token"
 
-// The following comment annotations are for Swagger API documentation.
-// They can be added directly above the function definition in your Go code.
+    // The following comment annotations are for Swagger API documentation.
+    // They can be added directly above the function definition in your Go code.
 
-// FetchNotesHandler handles the endpoint to fetch all notes for the authenticated user.
-// It requires a valid Bearer Token in the Authorization header.
-func (c *noteController) findAll(ctx *gin.Context) ([]*model.Note, error) {
-    notes, err := c.noteServ.FindAllForLoggedInUser(ctx)
-    if err != nil {
-        return nil, err
+    // FetchNotesHandler handles the endpoint to fetch all notes for the authenticated user.
+    // It requires a valid Bearer Token in the Authorization header.
+    func (c *noteController) findAll(ctx *gin.Context) ([]*model.Note, error) {
+        notes, err := c.noteServ.FindAllForLoggedInUser(ctx)
+        if err != nil {
+            return nil, err
+        }
+        return notes, nil
     }
-    return notes, nil
-}
-```
+    ```
 
-Explanation:
+- **Explanation:**
 
+    ```
     @Summary: A short summary of what the endpoint does.
     @Schemes: Specifies the communication protocol (e.g., http, https).
     @Description: A more detailed description of the endpoint's purpose.
@@ -63,30 +66,44 @@ Explanation:
     @Success: Describes a successful response with HTTP status code 200 and the expected response format (an array of model.Note objects in this case).
     @Router: Specifies the route of the endpoint.
     @Param: Describes a parameter of the endpoint. In this case, it specifies that the Authorization header is required and should contain a Bearer Token.
+    ```
 
 
-5. **Swagger init:**
+- **Swagger init:**
 
-Certainly! The `swag init` command generates Swagger documentation based on the comments provided in your Go code. Here's how you can run the command:
+    Certainly! The `swag init` command generates Swagger documentation based on the comments provided in your Go code. Here's how you can run the command:
 
-Make sure you have `swag` installed. If not, install it using:
+    Make sure you have `swag` installed. If not, install it using:
 
+    ```
     go get -u github.com/swaggo/swag/cmd/swag
+    ```
 
-then Run the following command in the terminal:
+    then Run the following command in the terminal:
 
+    ```
     swag init -g ./main.go -o ./docs
+    ```
     
--g: Specifies the entry point of your application (main file).
+    - -g: Specifies the entry point of your application (main file).
 
--o: Specifies the output directory for the generated Swagger files (in this case, ./docs).
+    - -o: Specifies the output directory for the generated Swagger files (in this case, ./docs).
 
-After running the command, you should see a `docs` folder generated in the specified output directory.
+    After running the command, you should see a `docs` folder generated in the specified output directory.
 
 
-6. **Run the server:**
-    ```bash
+- **Run the server:**
+    ```
     go run main.go
+    ```
 The server should now be running at http://localhost:3002.
 
 And Swager url should be http://localhost:3002/swagger/index.html#/
+
+## License
+MIT
+
+
+
+[//]: # (Links)
+[golang]: <https://golang.org/dl/>

@@ -18,7 +18,7 @@ func main() {
 
 	kernal := ioc.NewKernal()
 	ginServer := goServer.New(kernal, ioc.RegisterControllers)
-	ginApp := ginServer.GinApp
+	ginApp := ginServer.GetEngine()
 
 	ginApp.Use(middleware.GlobalIpBasedRateLimiterMiddleware())
 	ginApp.Use(middleware.ClsMiddleware())
