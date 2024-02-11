@@ -2,9 +2,10 @@ package middleware
 
 import (
 	"fmt"
-	"go-gin-api/src/logger"
 	"go-gin-api/src/service"
 	"net/http"
+
+	logger "github.com/openscriptsin/go-logger"
 
 	"github.com/gin-gonic/gin"
 )

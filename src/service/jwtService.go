@@ -2,10 +2,11 @@ package service
 
 import (
 	"fmt"
-	"go-gin-api/src/logger"
 	"strconv"
 	"strings"
 	"time"
+
+	logger "github.com/openscriptsin/go-logger"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"

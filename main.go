@@ -17,11 +17,13 @@ func main() {
 	fmt.Println("go gin api")
 
 	kernal := ioc.NewKernal()
-	ginServer := goServer.New(kernal, ioc.RegisterControllers)
+	ginServer := goServer.New(
+		kernal,
+		ioc.RegisterControllers,
+		middleware.GlobalIpBasedRateLimiterMiddleware(),
+		middleware.ClsMiddleware(),
+	)
 	ginApp := ginServer.GetEngine()
-
-	ginApp.Use(middleware.GlobalIpBasedRateLimiterMiddleware())
-	ginApp.Use(middleware.ClsMiddleware())
 
 	// registering swagger
 	docs.SwaggerInfo.BasePath = "/"

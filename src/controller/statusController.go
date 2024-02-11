@@ -1,8 +1,9 @@
 package controller
 
 import (
-	"go-gin-api/src/logger"
 	"net/http"
+
+	logger "github.com/openscriptsin/go-logger"
 
 	"github.com/gin-gonic/gin"
 )

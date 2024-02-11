@@ -4,9 +4,10 @@ import (
 	"context"
 	"fmt"
 	"go-gin-api/src/config"
-	"go-gin-api/src/logger"
 	"log"
 	"time"
+
+	logger "github.com/openscriptsin/go-logger"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"

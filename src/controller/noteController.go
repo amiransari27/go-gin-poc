@@ -2,11 +2,12 @@ package controller
 
 import (
 	"go-gin-api/src/entity"
-	"go-gin-api/src/logger"
 	"go-gin-api/src/middleware"
 	"go-gin-api/src/model"
 	"go-gin-api/src/service"
 	"net/http"
+
+	logger "github.com/openscriptsin/go-logger"
 
 	"github.com/gin-gonic/gin"
 )
