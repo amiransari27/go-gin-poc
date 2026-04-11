@@ -80,7 +80,7 @@ definitions:
 info:
   contact: {}
 paths:
-  /login:
+  /api/login:
     post:
       consumes:
       - application/json
@@ -102,7 +102,7 @@ paths:
       summary: Login user
       tags:
       - Auth
-  /me:
+  /api/me:
     get:
       consumes:
       - application/json
@@ -125,7 +125,7 @@ paths:
       summary: Me
       tags:
       - Auth
-  /notes:
+  /api/notes:
     get:
       consumes:
       - application/json
@@ -178,7 +178,7 @@ paths:
       summary: Add new Note
       tags:
       - Notes
-  /notes/{noteId}:
+  /api/notes/{noteId}:
     get:
       consumes:
       - application/json
@@ -239,7 +239,7 @@ paths:
       summary: Update Note
       tags:
       - Notes
-  /register:
+  /api/register:
     post:
       consumes:
       - application/json
@@ -261,7 +261,7 @@ paths:
       summary: Register user
       tags:
       - Auth
-  /status:
+  /api/status:
     get:
       consumes:
       - application/json

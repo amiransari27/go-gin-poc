@@ -15,7 +15,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/login": {
+        "/api/login": {
             "post": {
                 "description": "login user",
                 "consumes": [
@@ -49,7 +49,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/me": {
+        "/api/me": {
             "get": {
                 "security": [
                     {
@@ -86,7 +86,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/notes": {
+        "/api/notes": {
             "get": {
                 "security": [
                     {
@@ -170,7 +170,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/notes/{noteId}": {
+        "/api/notes/{noteId}": {
             "get": {
                 "security": [
                     {
@@ -265,7 +265,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/register": {
+        "/api/register": {
             "post": {
                 "description": "register new user",
                 "consumes": [
@@ -299,7 +299,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/status": {
+        "/api/status": {
             "get": {
                 "description": "do ping",
                 "consumes": [

@@ -1,0 +1,13 @@
+# Config file for Air
+[build]
+cmd = "go build -o ./tmp/main ."
+bin = "/$(go env GOPATH)/bin/dlv exec ./tmp/main --headless --listen=:40000 --api-version=2 --accept-multiclient --log --continue"
+include_ext = ["go"]
+exclude_dir = ["docs", "logs", ".vscode", "client", "tmp"]
+exclude_file = ["*.md","Dockerfile","docker-compose.yml",".gitignore"]
+
+[log]
+level = "debug"
+
+[misc]
+clean_on_exit = true

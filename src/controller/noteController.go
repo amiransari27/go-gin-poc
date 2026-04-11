@@ -24,7 +24,8 @@ func NewNoteController(server *gin.Engine, noteServ service.INoteService, jwtSer
 		logger,
 	}
 
-	group := server.Group("/notes", middleware.AuthMiddleware(jwtService, logger))
+	api := server.Group("/api")
+	group := api.Group("/notes", middleware.AuthMiddleware(jwtService, logger))
 
 	group.GET("/", func(ctx *gin.Context) {
 		notes, err := controller.findAll(ctx)
@@ -79,7 +80,7 @@ func NewNoteController(server *gin.Engine, noteServ service.INoteService, jwtSer
 // @Accept json
 // @Produce json
 // @Success 200 {string} save
-// @Router /notes [post]
+// @Router /api/notes [post]
 // @Param Authorization header string true "Bearer Token"
 // @Param data body entity.Note true "note payload"
 func (c *noteController) save(ctx *gin.Context) (string, error) {
@@ -106,7 +107,7 @@ func (c *noteController) save(ctx *gin.Context) (string, error) {
 // @Accept json
 // @Produce json
 // @Success 200 {object} []model.Note
-// @Router /notes [get]
+// @Router /api/notes [get]
 // @Param Authorization header string true "Bearer Token"
 func (c *noteController) findAll(ctx *gin.Context) ([]*model.Note, error) {
 	notes, err := c.noteServ.FindAllForLoggedInUser(ctx)
@@ -124,7 +125,7 @@ func (c *noteController) findAll(ctx *gin.Context) ([]*model.Note, error) {
 // @Accept json
 // @Produce json
 // @Success 200 {object} model.Note
-// @Router /notes/{noteId} [get]
+// @Router /api/notes/{noteId} [get]
 // @Param Authorization header string true "Bearer Token"
 // @Param noteId path string true "note id"
 func (c *noteController) findOne(ctx *gin.Context, noteId string) (*model.Note, error) {
@@ -143,7 +144,7 @@ func (c *noteController) findOne(ctx *gin.Context, noteId string) (*model.Note, 
 // @Accept json
 // @Produce json
 // @Success 200 {object} model.Note
-// @Router /notes/{noteId} [put]
+// @Router /api/notes/{noteId} [put]
 // @Param Authorization header string true "Bearer Token"
 // @Param noteId path string true "note id"
 // @Param data body entity.Note true "note payload"

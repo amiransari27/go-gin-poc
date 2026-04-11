@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3002:3002" # Expose the app on port 3002
+      - "40000:40000" # Debug port for Delve
+    volumes:
+      - ./:/app # Mount local directory for hot reloading
+      - /app/tmp # Temporary directory for Air
+      - /app/client/node_modules
+    # We need to build the application inside the container since we're mounting local files
+    command: air
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - mongo
+      - redis
+    container_name: go-server
+
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+    environment:
+      - REACT_APP_API_URL=http://server:3002
+      - NODE_ENV=development
+    depends_on:
+      - server
+    command: yarn run dev -- --host
+    container_name: react-client
+    stdin_open: true # This is needed for React's interactive mode
+    tty: true # This keeps the container running
+
+  mongo:
+    image: mongo:6.0
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME} # MongoDB root username
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD} # MongoDB root password
+
+  redis:
+    image: redis:7.0
+    container_name: redis
+    ports:
+      - "6379:6379"
+
+volumes:
+  mongo_data:

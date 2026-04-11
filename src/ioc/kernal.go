@@ -43,7 +43,7 @@ var otherInjectable = []interface{}{
 }
 
 func NewKernal() *dig.Container {
-	fmt.Print("called Kernal")
+	fmt.Println("called Kernal")
 	c := dig.New()
 
 	// bind

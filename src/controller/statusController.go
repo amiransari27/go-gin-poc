@@ -15,10 +15,11 @@ import (
 // @Accept json
 // @Produce json
 // @Success 200 {string} NewStatus
-// @Router /status [get]
+// @Router /api/status [get]
 func NewStatus(server *gin.Engine, logger logger.ILogrus) {
 
-	server.GET("/status", func(ctx *gin.Context) {
+	api := server.Group("/api")
+	api.GET("/status", func(ctx *gin.Context) {
 		//middleware
 		logger.Info(ctx, "calling middleware status called")
 	}, func(ctx *gin.Context) {

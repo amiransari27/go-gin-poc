@@ -5,6 +5,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/joho/godotenv"
 	log "github.com/sirupsen/logrus"
 	"golang.org/x/time/rate"
 
@@ -41,7 +42,12 @@ type RateLimiterConfigurations struct {
 var configuration = &Configurations{}
 
 func init() {
-	env := strings.ToUpper(os.Getenv("env"))
+	// Load .env file
+	if err := godotenv.Load(); err != nil {
+		log.Warn("No .env file found")
+	}
+
+	env := strings.ToUpper(os.Getenv("ENV"))
 	fmt.Println("Env : ", env)
 
 	if env == "PROD" {
@@ -67,6 +73,15 @@ func init() {
 	if err != nil {
 		log.Fatal("Unable to decode into struct", err)
 	}
+
+	// Initialize MongoConfigurations with .env data
+	configuration.Mongo = MongoConfigurations{
+		DBHost:     os.Getenv("MONGO_HOST"),
+		DBName:     os.Getenv("MONGO_DBNAME"),
+		DBUser:     os.Getenv("MONGO_USERNAME"),
+		DBPassword: os.Getenv("MONGO_PASSWORD"),
+	}
+
 }
 
 func GetConfig() *Configurations {

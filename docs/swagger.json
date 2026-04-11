@@ -4,7 +4,7 @@
         "contact": {}
     },
     "paths": {
-        "/login": {
+        "/api/login": {
             "post": {
                 "description": "login user",
                 "consumes": [
@@ -38,7 +38,7 @@
                 }
             }
         },
-        "/me": {
+        "/api/me": {
             "get": {
                 "security": [
                     {
@@ -75,7 +75,7 @@
                 }
             }
         },
-        "/notes": {
+        "/api/notes": {
             "get": {
                 "security": [
                     {
@@ -159,7 +159,7 @@
                 }
             }
         },
-        "/notes/{noteId}": {
+        "/api/notes/{noteId}": {
             "get": {
                 "security": [
                     {
@@ -254,7 +254,7 @@
                 }
             }
         },
-        "/register": {
+        "/api/register": {
             "post": {
                 "description": "register new user",
                 "consumes": [
@@ -288,7 +288,7 @@
                 }
             }
         },
-        "/status": {
+        "/api/status": {
             "get": {
                 "description": "do ping",
                 "consumes": [

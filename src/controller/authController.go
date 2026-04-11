@@ -27,7 +27,8 @@ func NewAuth(server *gin.Engine, service service.IAuthService, jwtService servic
 		logger:      logger,
 	}
 
-	server.POST("/login", func(ctx *gin.Context) {
+	api := server.Group("/api")
+	api.POST("/login", func(ctx *gin.Context) {
 
 		tokenObj, err := controller.login(ctx)
 
@@ -38,7 +39,7 @@ func NewAuth(server *gin.Engine, service service.IAuthService, jwtService servic
 		}
 	})
 
-	server.POST("/register", func(ctx *gin.Context) {
+	api.POST("/register", func(ctx *gin.Context) {
 
 		message, err := controller.register(ctx)
 
@@ -49,7 +50,7 @@ func NewAuth(server *gin.Engine, service service.IAuthService, jwtService servic
 		}
 	})
 
-	server.GET("/me", middleware.AuthMiddleware(jwtService, logger), func(ctx *gin.Context) {
+	api.GET("/me", middleware.AuthMiddleware(jwtService, logger), func(ctx *gin.Context) {
 
 		user, err := controller.me(ctx)
 
@@ -69,7 +70,7 @@ func NewAuth(server *gin.Engine, service service.IAuthService, jwtService servic
 // @Accept json
 // @Produce json
 // @Success 200 {string} Register
-// @Router /register [post]
+// @Router /api/register [post]
 // @Param data body entity.RegisterUser true "Register payload"
 func (c *authController) register(ctx *gin.Context) (string, error) {
 
@@ -95,7 +96,7 @@ func (c *authController) register(ctx *gin.Context) (string, error) {
 // @Accept json
 // @Produce json
 // @Success 200 {object} entity.LoginResponse
-// @Router /login [post]
+// @Router /api/login [post]
 // @Param data body entity.UserCredentials true "Login payload"
 func (c *authController) login(ctx *gin.Context) (*entity.LoginResponse, error) {
 
@@ -121,7 +122,7 @@ func (c *authController) login(ctx *gin.Context) (*entity.LoginResponse, error) 
 // @Produce json
 // @Security ApiKeyAuth
 // @Success 200 {object} model.User
-// @Router /me [get]
+// @Router /api/me [get]
 // @Param Authorization header string true "Bearer Token"
 func (c *authController) me(ctx *gin.Context) (*model.User, error) {
 
